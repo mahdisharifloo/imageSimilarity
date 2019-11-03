@@ -9,7 +9,6 @@ import pandas as pd
 import pickle as pkl
 #******************************  hiper parameters
 image_size = tuple((500, 500))
-arr_feature = {'name':None,'feature_vector':None}
 features = []
 labels   = []
 image_path_list = []
@@ -17,11 +16,10 @@ mse_all = []
 
 #object of feature extractor
 fe_obj = fe.Global_feature_extraction()
-dir_path = 'dataset/train'
+dir_path = 'dataset/data'
 lables = os.listdir(dir_path)
 lables.sort()
-features_path = 'output/fashion/resnet50/features.h5'
-labels_path = 'output/fashion/resnet50/labels.h5'
+
 
 #****************************** 
 print("\n\n [INFO] successfully loaded hiper parameters ...")
