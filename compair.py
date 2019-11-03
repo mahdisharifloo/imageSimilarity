@@ -6,6 +6,7 @@ import numpy as np
 import os
 import global_feature_extractor as fe
 import pickle as pkl 
+from skimage.measure import compare_ssim as ssim
 
 #image_path = '/home/mahdi/Pictures/test/1.jpeg'
 #image_path = input('please input your image address :  ')
@@ -28,16 +29,18 @@ lables = os.listdir(dir_path)
 lables.sort()
 counter = 0
 mse_all = []
+ssim_all = [] 
 
-
-def compair(single_feature):
+def compare(single_feature):
     for i in range(0,len(features)):
         feature = features[i]
         im_path = image_path_list[i]
         feature=np.array(feature)
         mse = np.square(np.subtract(single_feature, feature)).mean()
+        ssim_compare = ssim(single_feature,feature)
         mse_all.append([im_path,mse])
-    return mse_all
+        ssim_all.append([im_path,ssim_compare])
+    return mse_all,ssim_all
 
 
 
@@ -54,18 +57,24 @@ def input_image(image_path):
 def run():
     image_path = input('please input your image address :  ')
     single_feature = input_image(image_path)
-    mse_all = compair(single_feature)
+    mse_all ,ssim_all = compare(single_feature)
     df_mse = pd.DataFrame(mse_all,index=[image_path_list])
     df_mse[1] = df_mse[1].sort_index()
+    df_ssim = pd.DataFrame(ssim_all,index=[image_path_list])
+    df_ssim[1] = df_ssim[1].sort_index()
+
     # scale features in the range (0-1)
 #    scaler = MinMaxScaler(feature_range=(-1, 1))
 #    mse_all_scale = scaler.fit_transform([mse_all])
-    return df_mse
+    return df_mse,df_ssim
 
     
-df_mse = run()
+df_mse,df_ssim = run()
 
 
-with open('data.pkl','wb') as f:
+with open('data_mse.pkl','wb') as f:
     pkl.dump(df_mse,f)
+    
+with open('data_ssim.pkl','wb') as f:
+    pkl.dump(df_ssim,f)
 print('\n\n[STATUS] :   every thing is OK and image compared .  you best :) ')
