@@ -24,9 +24,6 @@ with open('image_path_list.pkl','rb') as f:
 #features = pd.read_csv('features.csv',index_col=[0])
 #features = features['features']
 fe_obj = fe.Global_feature_extraction()
-dir_path = 'dataset/train'
-lables = os.listdir(dir_path)
-lables.sort()
 counter = 0
 mse_all = []
 ssim_all = [] 
